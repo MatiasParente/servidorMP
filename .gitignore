@@ -1,16 +1,43 @@
+# ==========================
+# Environment
+# ==========================
+
 .env
 
-infraestructura/nginx/data
-infraestructura/nginx/letsencrypt
 
-infraestructura/mariadb/data
+# ==========================
+# Docker persistent data
+# ==========================
 
-infraestructura/mosquitto/data
-infraestructura/mosquitto/log
+infraestructura/mariadb/data/
 
-herramientas/n8n/data
-herramientas/node-red/data
+infraestructura/nginx/data/
+infraestructura/nginx/letsencrypt/
 
-backups/
+herramientas/n8n/data/
 
-*.log
+herramientas/node-red/data/
+
+
+# ==========================
+# Mosquitto
+# ==========================
+
+infraestructura/mosquitto/data/
+infraestructura/mosquitto/log/
+infraestructura/mosquitto/config/passwordfile
+
+
+# ==========================
+# Backups
+# ==========================
+
+infraestructura/backups/
+
+
+# ==========================
+# OS
+# ==========================
+
+.DS_Store
+Thumbs.db
