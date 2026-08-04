@@ -1,0 +1,16 @@
+.env
+
+infraestructura/nginx/data
+infraestructura/nginx/letsencrypt
+
+infraestructura/mariadb/data
+
+infraestructura/mosquitto/data
+infraestructura/mosquitto/log
+
+herramientas/n8n/data
+herramientas/node-red/data
+
+backups/
+
+*.log
