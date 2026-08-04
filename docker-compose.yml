@@ -5,7 +5,7 @@ services:
   # ==========================================================
 
   nginx:
-    image: jc21/nginx-proxy-manager:2.12.6
+    image: jc21/nginx-proxy-manager:2.15.1
     container_name: vps_nginx
     restart: unless-stopped
 
@@ -51,12 +51,13 @@ services:
   # ==========================================================
 
   phpmyadmin:
-    image: phpmyadmin:5.2.2-apache
+    image: phpmyadmin:5.2.3
     container_name: vps_phpmyadmin
     restart: unless-stopped
 
     environment:
       PMA_HOST: mariadb
+      PMA_ABSOLUTE_URI: https://${TAILNET_DOMAIN}/phpmyadmin/
 
     depends_on:
       - mariadb
@@ -99,7 +100,7 @@ services:
   # ==========================================================
 
   node-red:
-    image: nodered/node-red:4.1.1
+    image: nodered/node-red:5.0.4
     container_name: vps_nodered
     restart: unless-stopped
 
@@ -127,7 +128,7 @@ services:
   # ==========================================================
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:1.107.4
+    image: docker.n8n.io/n8nio/n8n:1.123.68
     container_name: vps_n8n
     restart: unless-stopped
 
