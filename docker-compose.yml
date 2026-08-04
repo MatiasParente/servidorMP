@@ -128,7 +128,7 @@ services:
   # ==========================================================
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:1.123.68
+    image: docker.n8n.io/n8nio/n8n:2.28.2
     container_name: vps_n8n
     restart: unless-stopped
 
@@ -172,6 +172,27 @@ services:
 
     expose:
       - "5678"
+
+  # ==========================================================
+  # HOMEPAGE DASHBOARD
+  # ==========================================================
+
+  homepage:
+
+    image: nginx:alpine
+
+    container_name: vps_homepage
+
+    restart: unless-stopped
+
+    volumes:
+      - ./pagina/html:/usr/share/nginx/html:ro
+
+    networks:
+      - proxy
+
+    expose:
+      - "80"
 
 networks:
 

@@ -17,6 +17,7 @@ infraestructura/nginx/letsencrypt/
 herramientas/n8n/data/
 
 herramientas/node-red/data/
+herramientas/node-red/data/settings.js
 
 
 # ==========================
@@ -32,7 +33,7 @@ infraestructura/mosquitto/config/passwordfile
 # Backups
 # ==========================
 
-infraestructura/backups/
+backups/
 
 
 # ==========================
