@@ -194,8 +194,90 @@ services:
     expose:
       - "80"
 
+  # ==========================================================
+# FREEZERGUARD
+# ==========================================================
+
+  freezerguard:
+    image: freezerguard:local
+    container_name: vps_freezerguard
+    restart: unless-stopped
+
+    env_file:
+      - ./Proyectos/FreezerGuard/.env
+
+    volumes:
+      - ./Proyectos/FreezerGuard:/var/www/html
+
+    networks:
+      - freezerguard
+
+    expose:
+      - "9000"
+
+  # ==========================================================
+  # FREEZERGUARD NGINX
+# ==========================================================
+
+  freezerguard-nginx:
+    image: nginx:alpine
+    container_name: vps_freezerguard_nginx
+    restart: unless-stopped
+
+    volumes:
+      - ./Proyectos/FreezerGuard:/var/www/html:ro
+      - ./docker/freezerguard/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+    depends_on:
+      - freezerguard
+
+    networks:
+      - proxy
+      - freezerguard
+
+    expose:
+      - "80"
+
+  # ==========================================================
+  # FREEZERGUARD SCHEDULER & WORKER
+  # ==========================================================
+
+  freezerguard-scheduler:
+    image: freezerguard:local
+    container_name: vps_freezerguard_scheduler
+    restart: unless-stopped
+    command: php artisan schedule:work
+    env_file:
+      - ./Proyectos/FreezerGuard/.env
+    volumes:
+      - ./Proyectos/FreezerGuard:/var/www/html
+    networks:
+      - freezerguard
+    depends_on:
+      - freezerguard
+
+  freezerguard-worker:
+    image: freezerguard:local
+    container_name: vps_freezerguard_worker
+    restart: unless-stopped
+    command: php artisan queue:work --sleep=3 --tries=3
+    env_file:
+      - ./Proyectos/FreezerGuard/.env
+    volumes:
+      - ./Proyectos/FreezerGuard:/var/www/html
+    networks:
+      - freezerguard
+    depends_on:
+      - freezerguard
+
 networks:
 
   proxy:
 
   internal:
+
+  freezerguard:
+
+volumes:
+
+  freezerguard_app:

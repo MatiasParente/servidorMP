@@ -14,20 +14,26 @@ Write-Host "Deteniendo contenedores..."
 docker compose stop
 
 
-Write-Host "Creando backup..."
+$tempPath = ".\backup\temp_staging"
+if (Test-Path $tempPath) { Remove-Item -Recurse -Force $tempPath }
+New-Item -ItemType Directory -Force $tempPath | Out-Null
 
-Compress-Archive `
--Path `
-docker-compose.yml,
-.env,
-pagina,
-infraestructura/nginx,
-infraestructura/mariadb,
-infraestructura/mosquitto,
-herramientas,
-scripts `
--DestinationPath $archivo `
--Force
+Write-Host "Copiando archivos temporalmente (excluyendo node_modules y vendor)..."
+Copy-Item "docker-compose.yml" -Destination $tempPath
+Copy-Item ".env" -Destination $tempPath
+
+$carpetas = @("pagina", "infraestructura\nginx", "infraestructura\mariadb", "infraestructura\mosquitto", "herramientas", "scripts", "docs", "proyectos")
+foreach ($carpeta in $carpetas) {
+    if (Test-Path ".\$carpeta") {
+        robocopy ".\$carpeta" "$tempPath\$carpeta" /E /XD node_modules vendor /NJH /NJS /NDL /NC /NS | Out-Null
+    }
+}
+
+Write-Host "Comprimiendo archivo ZIP..."
+Compress-Archive -Path "$tempPath\*" -DestinationPath $archivo -Force
+
+Write-Host "Limpiando archivos temporales..."
+Remove-Item -Recurse -Force $tempPath
 
 
 Write-Host "Backup creado:"

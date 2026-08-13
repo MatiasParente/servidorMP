@@ -33,7 +33,7 @@ infraestructura/mosquitto/config/passwordfile
 # Backups
 # ==========================
 
-backups/
+backup/full/
 
 
 # ==========================
@@ -42,3 +42,9 @@ backups/
 
 .DS_Store
 Thumbs.db
+
+# ==========================
+# Proyectos
+# ==========================
+
+proyectos/FreezerGuard/

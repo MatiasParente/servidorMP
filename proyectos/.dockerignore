@@ -1,0 +1,5 @@
+FreezerGuard/.git
+FreezerGuard/.env
+FreezerGuard/node_modules
+FreezerGuard/vendor
+FreezerGuard/storage/logs/*
