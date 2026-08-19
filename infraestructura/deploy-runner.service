@@ -1,0 +1,16 @@
+[Unit]
+Description=Deploy Runner Service for GitHub Webhooks
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+# Cambia esta ruta a donde realmente clones el repositorio en Oracle Cloud
+# Por ejemplo: /home/ubuntu/servidorMP/scripts/deploy-runner.sh
+ExecStart=/bin/bash /Ruta/A/Tu/Repositorio/servidorMP/scripts/deploy-runner.sh
+Restart=always
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target

@@ -1,52 +1,22 @@
 param (
-    [string]$ProjectPath = "d:\Contenedores Dockern\servidorMP\proyectos\FreezerGuard"
+    [Parameter(Mandatory = $true)]
+    [string]$ProjectName
 )
 
-Write-Host "Iniciando despliegue de FreezerGuard..." -ForegroundColor Cyan
+$DeployPath = "D:\Contenedores Dockern\servidorMP\scripts\deploy"
 
-Set-Location -Path $ProjectPath
+switch ($ProjectName) {
 
-Write-Host "Descargando últimos cambios de Git..." -ForegroundColor Yellow
-git pull origin main
+    "FreezerGuard" {
+        & "$DeployPath\FreezerGuard.ps1"
+    }
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: git pull falló." -ForegroundColor Red
-    exit 1
+    "OtraPagina" {
+        & "$DeployPath\OtraPagina.ps1"
+    }
+
+    default {
+        Write-Host "ERROR: No existe un deployment configurado para '$ProjectName'." -ForegroundColor Red
+        exit 1
+    }
 }
-
-Write-Host "Instalando dependencias de PHP..." -ForegroundColor Yellow
-docker exec vps_freezerguard composer install --no-interaction --prefer-dist --optimize-autoloader
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: composer install falló." -ForegroundColor Red
-    exit 1
-}
-
-Write-Host "Ejecutando migraciones..." -ForegroundColor Yellow
-docker exec vps_freezerguard php artisan migrate --force
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: las migraciones fallaron." -ForegroundColor Red
-    exit 1
-}
-
-Write-Host "Instalando dependencias de Node..." -ForegroundColor Yellow
-docker exec vps_freezerguard npm install
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: npm install falló." -ForegroundColor Red
-    exit 1
-}
-
-Write-Host "Compilando Vite..." -ForegroundColor Yellow
-docker exec vps_freezerguard npm run build
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: npm run build falló." -ForegroundColor Red
-    exit 1
-}
-
-Write-Host "Limpiando cachés de Laravel..." -ForegroundColor Yellow
-docker exec vps_freezerguard php artisan optimize:clear
-
-Write-Host "¡Despliegue completado con éxito!" -ForegroundColor Green

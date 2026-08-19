@@ -47,3 +47,34 @@ Tu nueva página ya está corriendo internamente, pero el mundo exterior no la v
    - **IMPORTANTE:** Recuerda siempre ir a la "tuerca" (Opciones Avanzadas) de esa location y agregar `proxy_set_header X-Forwarded-Prefix /mipagina;` si el proyecto (como Laravel) necesita saber en qué carpeta está instalado.
 
 ¡Y listo! Con esos 3 pasos, puedes alojar infinitas páginas en el servidor.
+
+## Paso 4: Automatizar el Deploy (GitHub Webhooks)
+
+Si quieres que tu nueva página o proyecto se actualice automáticamente cada vez que haces un push a GitHub, sigue estos 3 pasos:
+
+1. **Registrar el repositorio en el servicio de deploy:**
+   Abre el archivo `deploy-service/server.js`. Busca la línea que dice `const projects = {` y agrega tu nuevo repositorio mapeado a un nombre de proyecto.
+   Ejemplo:
+   ```javascript
+   const projects = {
+       'MatiasParente/FreezerGuard': 'FreezerGuard',
+       'MatiasParente/MiNuevaPaginaRepo': 'MiNuevaPagina' // <--- Agrega esto
+   };
+   ```
+
+2. **Crear el script de deploy:**
+   Crea un archivo llamado `MiNuevaPagina.ps1` y otro `MiNuevaPagina.sh` dentro de la carpeta `scripts/deploy/`. Ahí debes escribir los comandos que actualizan tu código. Ejemplo básico:
+   ```bash
+   cd "D:\Contenedores Dockern\servidorMP\proyectos\MiNuevaPagina" # o la ruta en Linux
+   git pull origin main
+   ```
+
+3. **Registrar el script en el switch:**
+   Abre el archivo `scripts/deploy.ps1` (y su versión `.sh`) y agrega un nuevo caso al `switch` para que reconozca tu proyecto y llame a tu script:
+   ```powershell
+       "MiNuevaPagina" {
+           & "$DeployPath\MiNuevaPagina.ps1"
+       }
+   ```
+
+**Cómo probarlo:** Ve a GitHub > Configuración de tu repositorio > Webhooks. Crea uno apuntando a `https://smee.io/Vxu7SLbrAl7xvld` (application/json) y pon tu contraseña secreta del `.env`. Haz un push y verás en tu servidor cómo `deploy-runner` recibe la orden y la ejecuta al instante.

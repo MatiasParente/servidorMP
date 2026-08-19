@@ -32,6 +32,14 @@ docker image prune
 
 .\scripts\backup.ps1
 
-# Ejecutar Deploy
-
+# Ejecutar Deploy Manual
 .\scripts\deploy.ps1
+
+# Ejecutar el "Runner" de Deploy (Para actualización automática 24/7)
+## En Windows:
+.\scripts\deploy-runner.ps1
+
+## En Linux (Oracle Cloud):
+sudo systemctl enable deploy-runner.service
+sudo systemctl start deploy-runner.service
+sudo systemctl status deploy-runner.service

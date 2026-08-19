@@ -270,8 +270,40 @@ services:
     depends_on:
       - freezerguard
 
-networks:
+  deploy-service:
+    build:
+      context: ./deploy-service
+      dockerfile: Dockerfile
 
+    container_name: vps_deploy_service
+
+    restart: unless-stopped
+
+    environment:
+      PORT: 3000
+      DEPLOY_TOKEN: ${DEPLOY_TOKEN}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET}
+
+    volumes:
+      - ./deploy-queue:/queue
+
+    networks:
+      - internal
+
+    expose:
+      - "3000"
+
+  smee-client:
+    image: node:20-alpine
+    container_name: vps_smee_client
+    restart: unless-stopped
+    command: npx -y smee-client -u https://smee.io/Vxu7SLbrAl7xvld -t http://deploy-service:3000/github-webhook
+    depends_on:
+      - deploy-service
+    networks:
+      - internal
+
+networks:
   proxy:
 
   internal:

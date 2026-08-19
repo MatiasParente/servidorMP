@@ -21,11 +21,12 @@ New-Item -ItemType Directory -Force $tempPath | Out-Null
 Write-Host "Copiando archivos temporalmente (excluyendo node_modules y vendor)..."
 Copy-Item "docker-compose.yml" -Destination $tempPath
 Copy-Item ".env" -Destination $tempPath
+Copy-Item "infraestructura\deploy-runner.service" -Destination "$tempPath\infraestructura\" -ErrorAction SilentlyContinue
 
-$carpetas = @("pagina", "infraestructura\nginx", "infraestructura\mariadb", "infraestructura\mosquitto", "herramientas", "scripts", "docs", "proyectos")
+$carpetas = @("pagina", "infraestructura\nginx", "infraestructura\mariadb", "infraestructura\mosquitto", "herramientas", "scripts", "docs", "proyectos", "deploy-service", "deploy-queue")
 foreach ($carpeta in $carpetas) {
     if (Test-Path ".\$carpeta") {
-        robocopy ".\$carpeta" "$tempPath\$carpeta" /E /XD node_modules vendor /NJH /NJS /NDL /NC /NS | Out-Null
+        robocopy ".\$carpeta" "$tempPath\$carpeta" /E /XD node_modules vendor /R:0 /W:0 /NJH /NJS /NDL /NC /NS | Out-Null
     }
 }
 
