@@ -7,6 +7,13 @@ docker compose up -d
 
 docker compose down
 
+# Encender
+
+docker compose start
+
+# Apagar
+
+docker compose stop
 
 # Logs
 
