@@ -19,7 +19,6 @@ if (Test-Path $tempPath) { Remove-Item -Recurse -Force $tempPath }
 New-Item -ItemType Directory -Force $tempPath | Out-Null
 
 Write-Host "Copiando archivos temporalmente (excluyendo node_modules y vendor)..."
-Copy-Item "docker-compose.yml" -Destination $tempPath
 Copy-Item ".env" -Destination $tempPath
 Copy-Item "infraestructura\deploy-runner.service" -Destination "$tempPath\infraestructura\" -ErrorAction SilentlyContinue
 

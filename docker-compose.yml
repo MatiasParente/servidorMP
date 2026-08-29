@@ -200,6 +200,9 @@ services:
 
   freezerguard:
     image: freezerguard:local
+    build:
+      context: ./proyectos
+      dockerfile: ../docker/freezerguard/Dockerfile
     container_name: vps_freezerguard
     restart: unless-stopped
 

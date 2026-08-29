@@ -2,6 +2,9 @@
 
 docker compose up -d
 
+# Iniciar con rebuild
+
+docker compose up -d --build
 
 # Detener
 
@@ -50,3 +53,6 @@ docker image prune
 sudo systemctl enable deploy-runner.service
 sudo systemctl start deploy-runner.service
 sudo systemctl status deploy-runner.service
+
+# Crear imagen para los conetendores de freezerguard
+docker build -t freezerguard:local -f docker/freezerguard/Dockerfile ./proyectos
