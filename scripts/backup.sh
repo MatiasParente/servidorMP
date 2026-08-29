@@ -20,14 +20,16 @@ mkdir -p "$TEMP_PATH"
 echo "Copiando archivos temporalmente (excluyendo node_modules y vendor)..."
 cp docker-compose.yml "$TEMP_PATH/" 2>/dev/null
 cp .env "$TEMP_PATH/" 2>/dev/null
+mkdir -p "$TEMP_PATH/proyectos/FreezerGuard"
+cp proyectos/FreezerGuard/.env "$TEMP_PATH/proyectos/FreezerGuard/" 2>/dev/null
 
 CARPETAS=("pagina" "infraestructura/nginx" "infraestructura/mariadb" "infraestructura/mosquitto" "herramientas" "scripts" "docs" "proyectos" "deploy-service" "deploy-queue")
 
 for CARPETA in "${CARPETAS[@]}"; do
     if [ -d "./$CARPETA" ]; then
         mkdir -p "$TEMP_PATH/$CARPETA"
-        # Usamos rsync para copiar excluyendo carpetas pesadas
-        rsync -a --exclude 'node_modules' --exclude 'vendor' "./$CARPETA/" "$TEMP_PATH/$CARPETA/"
+        # Usamos rsync para copiar excluyendo carpetas pesadas y FreezerGuard
+        rsync -a --exclude 'node_modules' --exclude 'vendor' --exclude 'FreezerGuard' "./$CARPETA/" "$TEMP_PATH/$CARPETA/"
     fi
 done
 

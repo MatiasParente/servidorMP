@@ -23,10 +23,13 @@ Copy-Item "docker-compose.yml" -Destination $tempPath
 Copy-Item ".env" -Destination $tempPath
 Copy-Item "infraestructura\deploy-runner.service" -Destination "$tempPath\infraestructura\" -ErrorAction SilentlyContinue
 
+New-Item -ItemType Directory -Force "$tempPath\proyectos\FreezerGuard" | Out-Null
+Copy-Item "proyectos\FreezerGuard\.env" -Destination "$tempPath\proyectos\FreezerGuard\" -ErrorAction SilentlyContinue
+
 $carpetas = @("pagina", "infraestructura\nginx", "infraestructura\mariadb", "infraestructura\mosquitto", "herramientas", "scripts", "docs", "proyectos", "deploy-service", "deploy-queue")
 foreach ($carpeta in $carpetas) {
     if (Test-Path ".\$carpeta") {
-        robocopy ".\$carpeta" "$tempPath\$carpeta" /E /XD node_modules vendor /R:0 /W:0 /NJH /NJS /NDL /NC /NS | Out-Null
+        robocopy ".\$carpeta" "$tempPath\$carpeta" /E /XD node_modules vendor FreezerGuard /R:0 /W:0 /NJH /NJS /NDL /NC /NS | Out-Null
     }
 }
 
