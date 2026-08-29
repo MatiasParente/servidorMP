@@ -20,6 +20,7 @@ New-Item -ItemType Directory -Force $tempPath | Out-Null
 
 Write-Host "Copiando archivos temporalmente (excluyendo node_modules y vendor)..."
 Copy-Item ".env" -Destination $tempPath
+New-Item -ItemType Directory -Force "$tempPath\infraestructura" | Out-Null
 Copy-Item "infraestructura\deploy-runner.service" -Destination "$tempPath\infraestructura\" -ErrorAction SilentlyContinue
 
 New-Item -ItemType Directory -Force "$tempPath\proyectos\FreezerGuard" | Out-Null
