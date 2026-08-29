@@ -27,6 +27,9 @@ docker logs nombre_contenedor
 
 docker restart nombre
 
+# Reiniciar con composer un contenedor en especifico
+
+docker compose restart homepage
 
 # Actualizar imágenes
 
