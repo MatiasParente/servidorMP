@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     nodejs \
     npm \
-    && docker-php-ext-install pdo_pgsql pgsql bcmath zip \
+    && docker-php-ext-install pdo_mysql pdo_pgsql pgsql bcmath zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

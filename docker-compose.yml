@@ -214,6 +214,7 @@ services:
 
     networks:
       - freezerguard
+      - internal
 
     expose:
       - "9000"
@@ -256,6 +257,7 @@ services:
       - ./proyectos/FreezerGuard:/var/www/html
     networks:
       - freezerguard
+      - internal
     depends_on:
       - freezerguard
 
@@ -270,6 +272,7 @@ services:
       - ./proyectos/FreezerGuard:/var/www/html
     networks:
       - freezerguard
+      - internal
     depends_on:
       - freezerguard
 
