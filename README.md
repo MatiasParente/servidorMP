@@ -199,6 +199,44 @@ Configurá el proxy reverso apuntando al servicio principal para habilitar el ac
 - **Forward Host**: `homepage`
 - **Forward Port**: `80`
 
-## Si todo funciona correctamente intenta acceder a la aplicacion web a travez del link:
+---
+
+### 2.6. Configuración de Cloudflare (Acceso Público a FreezerGuard)
+
+Cloudflare actúa como capa de seguridad entre Internet y el servidor, protegiendo la IP pública real y filtrando tráfico malicioso antes de que llegue al servidor.
+
+**¿Por qué Cloudflare?**
+
+- Oculta la IP pública real del servidor (proxy inverso en la nube).
+- Protección contra ataques DDoS y bots.
+- HTTPS automático con certificados propios de Cloudflare.
+- Control de tráfico con reglas WAF (Firewall de Aplicaciones Web).
+- Solo la página pública de **FreezerGuard** queda expuesta; el resto de los servicios permanece accesible únicamente por Tailscale.
+
+**Configuración DNS en Cloudflare:**
+
+1. Ingresá al panel de Cloudflare y seleccioná tu dominio.
+2. Ir a **DNS → Records → Add record**.
+3. Crear un registro tipo `A` apuntando a la IP pública del servidor:
+
+   | Type | Name | Content | Proxy status |
+   |---|---|---|---|
+   | A | `freezerguard` (o el subdominio deseado) | `IP_PUBLICA_DEL_SERVIDOR` | Proxied |
+
+   > Asegurate de que el estado sea **Proxied** (nube naranja), no "DNS only". Esto es lo que oculta la IP real y activa las protecciones de Cloudflare.
+
+4. En **Nginx Proxy Manager**, crear un nuevo Proxy Host para ese subdominio:
+   - **Domain**: `freezerguard.tudominio.com`
+   - **Forward Host**: `vps_freezerguard_nginx` (nombre interno del contenedor)
+   - **Forward Port**: `80`
+   - **SSL**: Habilitar con Let's Encrypt o usar el certificado de Cloudflare Origin.
+
+**Resultado:** La app de FreezerGuard queda públicamente accesible en `https://freezerguard.tudominio.com`, mientras que Node-RED, phpMyAdmin, n8n y el resto de los servicios siguen siendo privados y accesibles solo vía Tailscale.
+
+---
+
+## Verificación Final
+
+Si todo está correctamente configurado, la aplicación web de FreezerGuard debe ser accesible en:
 
 ### [https://tip-proymf26.tipyenaccion.net/](https://tip-proymf26.tipyenaccion.net/)
