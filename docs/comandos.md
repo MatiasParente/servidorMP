@@ -59,3 +59,34 @@ sudo systemctl status deploy-runner.service
 
 # Crear imagen para los conetendores de freezerguard
 docker build -t freezerguard:local -f docker/freezerguard/Dockerfile ./proyectos
+
+# ⚠️ IMPORTANTE: Al recrear FreezerGuard, SIEMPRE reiniciar también freezerguard-nginx
+docker compose up -d --force-recreate freezerguard freezerguard-nginx
+
+# ============================================================
+# SETUP INICIAL DEL SERVIDOR (solo una vez)
+# ============================================================
+
+# Instalar el servicio deploy-runner (sin esto, los push de GitHub no se despliegan)
+sudo cp ~/servidorMP/infraestructura/deploy-runner.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable deploy-runner
+sudo systemctl start deploy-runner
+
+# ============================================================
+# TROUBLESHOOTING
+# ============================================================
+
+# Si FreezerGuard da 502 después de recrear contenedores:
+docker restart vps_freezerguard_nginx
+
+# Si el deploy no funciona (los push no se aplican):
+sudo systemctl status deploy-runner
+# Si está muerto:
+sudo systemctl restart deploy-runner
+
+# Ver órdenes de deploy pendientes:
+ls -la ~/servidorMP/deploy-queue/
+
+# Ver logs del deploy runner:
+sudo journalctl -u deploy-runner --tail=50
